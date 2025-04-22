@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: user-service
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3316/fooddelivery
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: mysql
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: broker:29092
+            - name: FOODDELIVERY_APP_JWTSECRET
+              value: foodDeliverySecretKeyWhichShouldBeVeryLongAndSecureanditneedstoberobustandwellmaintedwithalllfacilitiesandalsoneedtoconsideralsphabranvecenturykfdkaflkd
+            - name: FOODDELIVERY_APP_JWTEXPIRATIONMS
+              value: "86400000"
+          image: asirijayawardena920/new-user-service
+          name: user-service
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: user-service
+  name: user-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8081
+  selector:
+    app: user-service
+status:
+  loadBalancer: {}
