@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zookeeper
+  name: user-zookeeper
   labels:
-    app: zookeeper
+    app: user-zookeeper
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: zookeeper
+      app: user-zookeeper
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: user-zookeeper
     spec:
       containers:
-        - name: zookeeper
+        - name: user-zookeeper
           image: confluentinc/cp-zookeeper:7.5.0
           ports:
             - containerPort: 2181
@@ -29,12 +29,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeeper
+  name: user-zookeeper
   labels:
-    app: zookeeper
+    app: user-zookeeper
 spec:
   ports:
     - port: 2181
       targetPort: 2181
   selector:
-    app: zookeeper
+    app: user-zookeeper

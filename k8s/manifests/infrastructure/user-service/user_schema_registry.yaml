@@ -2,41 +2,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: schema-registry
+  name: user-schema-registry
   labels:
-    app: schema-registry
+    app: user-schema-registry
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: schema-registry
+      app: user-schema-registry
   template:
     metadata:
       labels:
-        app: schema-registry
+        app: user-schema-registry
     spec:
       containers:
-        - name: schema-registry
+        - name: user-schema-registry
           image: confluentinc/cp-schema-registry:7.5.0
           ports:
             - containerPort: 8081
           env:
             - name: SCHEMA_REGISTRY_HOST_NAME
-              value: "schema-registry"
+              value: "user-schema-registry"
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
-              value: "broker:29092"
+              value: "user-broker:29092"
             - name: SCHEMA_REGISTRY_LISTENERS
-              value: "http://schema-registry:8081"
+              value: "http://user-schema-registry:8081"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: schema-registry
+  name: user-schema-registry
   labels:
-    app: schema-registry
+    app: user-schema-registry
 spec:
   ports:
     - port: 8081
       targetPort: 8081
   selector:
-    app: schema-registry
+    app: user-schema-registry

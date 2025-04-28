@@ -1,22 +1,19 @@
-# Zookeeper
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zookeeper
-  labels:
-    app: zookeeper
+  name: restaurant-zookeeper
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: zookeeper
+      app: restaurant-zookeeper
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: restaurant-zookeeper
     spec:
       containers:
-        - name: zookeeper
+        - name: restaurant-zookeeper
           image: confluentinc/cp-zookeeper:7.5.0
           ports:
             - containerPort: 2181
@@ -29,12 +26,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeeper
-  labels:
-    app: zookeeper
+  name: restaurant-zookeeper
 spec:
+  type: ClusterIP
+  selector:
+    app: restaurant-zookeeper
   ports:
     - port: 2181
       targetPort: 2181
-  selector:
-    app: zookeeper

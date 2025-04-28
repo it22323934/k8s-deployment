@@ -1,42 +1,41 @@
-# Kafka UI
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-ui
+  name: user-kafka-ui
   labels:
-    app: kafka-ui
+    app: user-kafka-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-ui
+      app: user-kafka-ui
   template:
     metadata:
       labels:
-        app: kafka-ui
+        app: user-kafka-ui
     spec:
       containers:
-        - name: kafka-ui
+        - name: user-kafka-ui
           image: provectuslabs/kafka-ui:latest
           ports:
             - containerPort: 8080
           env:
             - name: KAFKA_CLUSTERS_NAME
-              value: "local"
+              value: "user"
             - name: KAFKA_CLUSTERS_BOOTSTRAPSERVERS
-              value: "broker:29092"
+              value: "user-broker:29092"
             - name: DYNAMIC_CONFIG_ENABLED
               value: "true"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-ui
+  name: user-kafka-ui
   labels:
-    app: kafka-ui
+    app: user-kafka-ui
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: kafka-ui
+    app: user-kafka-ui

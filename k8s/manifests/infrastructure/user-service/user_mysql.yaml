@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: mysql
-  name: mysql
+    app: user-mysql
+  name: user-mysql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: user-mysql
   strategy: {}
   template:
     metadata:
       labels:
-        app: mysql
+        app: user-mysql
     spec:
       containers:
         - image: mysql:8.3
-          name: mysql
+          name: user-mysql
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: mysql
@@ -32,7 +32,7 @@ spec:
           ports:
             - containerPort: 3306
           volumeMounts:
-            - name: mysql-data
+            - name: user-mysql-data
               mountPath: /var/lib/mysql
           livenessProbe:
             exec:
@@ -41,55 +41,55 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
       volumes:
-        - name: mysql-data
+        - name: user-mysql-data
           persistentVolumeClaim:
-            claimName: mysql-pvc
-
+            claimName: user-mysql-pvc
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mysql
-  name: mysql
+    app: user-mysql
+  name: user-mysql
 spec:
   ports:
     - port: 3316
       protocol: TCP
       targetPort: 3306
   selector:
-    app: mysql
+    app: user-mysql
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mysql-pv
+  name: user-mysql-pv
 spec:
   accessModes:
     - ReadWriteOnce
   capacity:
     storage: 1Gi
   hostPath:
-    path: /data/mysql
+    path: /data/user-mysql
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pvc
+  name: user-mysql-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
+
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mysql-initdb-config
+  name: user-mysql-initdb-config
 data:
   initdb.sql: |
     CREATE DATABASE IF NOT EXISTS user_service;
